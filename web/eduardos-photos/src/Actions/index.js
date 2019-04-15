@@ -1,11 +1,14 @@
 import { GET_USERS, GET_ALBUMS, GET_PHOTOS } from '../constants'
 
-export const getUsers = async () => {
-    const users = await (await fetch('https://jsonplaceholder.typicode.com/users')).json()
-    return {
-        type: GET_USERS,
-        payload: users
-    }
+export const getUsers = () => dispatch => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(users => {
+            dispatch({
+                type: GET_USERS,
+                payload: users
+            })
+        })
 }
 
 export const getAlbums = userId => async dispatch => {

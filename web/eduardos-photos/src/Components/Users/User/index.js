@@ -1,36 +1,34 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getAlbums } from '../../../Actions'
+import Albums from '../../Albums'
+import Album from '../../Albums/Album'
 
 class User extends Component {
 
   async componentDidMount() {
-    const onLoad = this.props.onLoad;
-    const uderId = this.props.match.params.id;
+    const onLoad = this.props.onLoad
+    const uderId = this.props.match.params.id
     onLoad(uderId)
   }
 
   render() {
-    const { match: { url }, user={}, albums=[] } = this.props
+    const { user={}, albums=[] } = this.props
     const { name, email } = user
-    console.log(this.props)
     return (
       <Fragment>
         <div>
-          <Link to='/'>Back</Link>
+          <Link to='/'>Back home</Link>
           <h1>{name}</h1>
           <p>{email}</p>
         </div>
-        <div>
-          <ul>
-            {albums.map(({id, title}) => 
-              <li key={id}>
-                <Link to={`${url}album/${id}`}>{title}</Link>
-              </li>
-            )}
-          </ul>
-        </div>
+        <Route exact path={`/user/:id`}  render={
+          props => <Albums {...props} albums={albums} />
+        }/>
+        <Route exact path={`/user/:id/album/:albumid`}  render={
+          props => <Album {...props} album={albums.find(album => album.id === parseInt(props.match.params.albumid))} />
+        }/>
       </Fragment>
     )
   }
